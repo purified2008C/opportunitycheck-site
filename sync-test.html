@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpportunityCheck — Sync Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172033;
+      max-width: 680px;
+      margin: 24px auto;
+      padding: 16px;
+    }
+    main {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 5px 24px #17203312;
+    }
+    h1 { color: #087f5b; font-size: 25px; }
+    label { display: block; font-weight: bold; margin-top: 16px; }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 18px;
+      border: 0;
+      border-radius: 8px;
+      background: #087f5b;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:disabled { opacity: .6; }
+    #result {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 18px;
+      min-height: 45px;
+    }
+    .note { color: #475569; font-size: 14px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>OpportunityCheck Sync Test</h1>
+  <p>Test the admin login and Jobicy opportunity synchronisation.</p>
+
+  <p class="note">
+    Enter your Supabase project URL and publishable key.
+    Never enter a service-role key or Supabase secret key here.
+    Your password is used only for this sign-in attempt.
+  </p>
+
+  <form id="testForm">
+    <label for="projectUrl">Supabase Project URL</label>
+    <input id="projectUrl" type="url"
+      placeholder="https://your-project-id.supabase.co"
+      required>
+
+    <label for="publishableKey">Supabase Publishable Key</label>
+    <input id="publishableKey" type="password"
+      placeholder="sb_publishable_..."
+      autocomplete="off" required>
+
+    <label for="email">Supabase Login Email</label>
+    <input id="email" type="email"
+      autocomplete="username" required>
+
+    <label for="password">Supabase Password</label>
+    <input id="password" type="password"
+      autocomplete="current-password" required>
+
+    <button id="runButton" type="submit">
+      Sign In and Test Sync
+    </button>
+  </form>
+
+  <h3>Test result</h3>
+  <div id="result" role="status">Waiting for you to start the test.</div>
+</main>
+
+<script type="module">
+  import { createClient }
+    from "https://esm.sh/@supabase/supabase-js@2";
+
+  const form = document.getElementById("testForm");
+  const button = document.getElementById("runButton");
+  const result = document.getElementById("result");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    button.disabled = true;
+    result.textContent = "Signing in to Supabase...";
+
+    let client;
+
+    try {
+      const projectUrl =
+        document.getElementById("projectUrl").value.trim().replace(/\/+$/, "");
+      const publishableKey =
+        document.getElementById("publishableKey").value.trim();
+      const email =
+        document.getElementById("email").value.trim();
+      const password =
+        document.getElementById("password").value;
+
+      if (!/^https:\/\/[a-zA-Z0-9-]+\.supabase\.co$/.test(projectUrl)) {
+        throw new Error("Enter your Supabase project URL, ending in .supabase.co.");
+      }
+
+      client = createClient(projectUrl, publishableKey, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      });
+
+      const { data: login, error: loginError } =
+        await client.auth.signInWithPassword({ email, password });
+
+      document.getElementById("password").value = "";
+
+      if (loginError) {
+        throw new Error("Sign-in failed: " + loginError.message);
+      }
+
+      if (!login.session?.access_token) {
+        throw new Error("Sign-in succeeded, but no session token was returned.");
+      }
+
+      result.textContent =
+        "Sign-in successful. Calling sync-opportunities now...";
+
+      const { data, error } = await client.functions.invoke(
+        "sync-opportunities",
+        { body: {} }
+      );
+
+      if (error) {
+        let detail = error.message || "Function request failed.";
+
+        if (error.context instanceof Response) {
+          try {
+            const body = await error.context.clone().json();
+            detail += "\nServer response: " + JSON.stringify(body, null, 2);
+          } catch (_) {}
+        }
+
+        throw new Error(detail);
+      }
+
+      result.textContent =
+        "FUNCTION RESPONSE\n\n" + JSON.stringify(data, null, 2);
+
+    } catch (error) {
+      result.textContent =
+        "TEST FAILED\n\n" +
+        (error instanceof Error ? error.message : String(error)) +
+        "\n\nCheck the displayed error before changing any settings.";
+    } finally {
+      if (client) {
+        await client.auth.signOut().catch(() => {});
+      }
+      document.getElementById("password").value = "";
+      button.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
