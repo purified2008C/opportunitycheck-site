@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="OpportunityCheck helps you discover opportunities and check suspicious listings before you trust them.">
+  <title>OpportunityCheck — Verify Before You Trust</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121d30;
+      --panel2: #19263b;
+      --text: #f5f7fb;
+      --muted: #aab6c9;
+      --green: #43d9a3;
+      --blue: #83b7ff;
+      --border: #293750;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(1120px, 92%); margin: auto; }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(11,18,32,.96);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav {
+      min-height: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+    }
+    .brand { font-weight: 850; font-size: 1.2rem; letter-spacing: -.5px; }
+    .brand span { color: var(--green); }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    nav a { color: var(--muted); font-size: .92rem; }
+    nav a:hover { color: var(--green); }
+
+    .hero { padding: 76px 0 54px; }
+    .tag {
+      display: inline-block;
+      border: 1px solid #236b58;
+      color: var(--green);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: .83rem;
+      font-weight: 700;
+    }
+    h1 {
+      max-width: 800px;
+      font-size: clamp(2.5rem, 7vw, 4.7rem);
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin: 22px 0;
+    }
+    h1 span { color: var(--green); }
+    .lead { max-width: 650px; color: var(--muted); font-size: 1.08rem; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 750;
+      background: var(--panel2);
+      color: var(--text);
+    }
+    .btn.primary { background: var(--green); color: #06251c; border-color: var(--green); }
+    .btn:hover { filter: brightness(1.08); }
+
+    section { padding: 45px 0; scroll-margin-top: 100px; }
+    .section-title { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0 0 8px; }
+    .sub { color: var(--muted); margin-top: 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 21px;
+      min-width: 0;
+    }
+    .card h3 { margin: 8px 0; }
+    .card p { color: var(--muted); font-size: .94rem; }
+    .symbol { font-size: 1.65rem; }
+    .card-link { color: var(--green); font-weight: 750; }
+    .searchbar { display: flex; gap: 10px; margin: 20px 0; }
+    input, textarea, select {
+      width: 100%;
+      min-width: 0;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: #0d1728;
+    }
+    textarea { min-height: 125px; resize: vertical; }
+    label { display: block; font-weight: 700; margin: 14px 0 7px; }
+    .notice {
+      background: #172c2c;
+      border: 1px solid #28604f;
+      border-radius: 12px;
+      padding: 16px;
+      color: #c7f7e6;
+    }
+    .status { margin-top: 14px; overflow-wrap: anywhere; }
+    .small { font-size: .85rem; color: var(--muted); }
+    .plans .price { font-size: 1.8rem; font-weight: 850; }
+    footer { border-top: 1px solid var(--border); margin-top: 35px; padding: 28px 0; color: var(--muted); }
+    .footer-row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .hero { padding-top: 52px; }
+      nav { gap: 12px; }
+    }
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+      .searchbar { flex-direction: column; }
+      h1 { letter-spacing: -1.2px; }
+      .nav { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#home">Opportunity<span>Check</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#discover">Discover</a>
+      <a href="#verify">Verify</a>
+      <a href="#alerts">Alerts</a>
+      <a href="#plans">Plans</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" id="home">
+    <span class="tag">Opportunities with more confidence</span>
+    <h1>Find your next opportunity.<br><span>Check before you trust.</span></h1>
+    <p class="lead">
+      Explore jobs, scholarships, grants, internships, competitions and courses.
+      Learn how to check suspicious listings before sharing money or personal information.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="#discover">Explore opportunities</a>
+      <a class="btn" href="#verify">Check an opportunity</a>
+    </div>
+  </section>
+
+  <section class="wrap" id="discover">
+    <h2 class="section-title">Discover opportunities</h2>
+    <p class="sub">Choose a category to start exploring.</p>
+
+    <div class="searchbar">
+      <input id="searchInput" type="search" placeholder="Search jobs, scholarships, courses..." aria-label="Search categories">
+      <button class="btn primary" id="searchButton" type="button">Search</button>
+    </div>
+
+    <div class="grid" id="categoryGrid">
+      <article class="card" data-terms="jobs employment careers">
+        <div class="symbol">💼</div><h3>Jobs</h3>
+        <p>Explore employment and remote-work opportunities.</p>
+        <a class="card-link" href="#opportunityResults">Explore jobs →</a>
+      </article>
+      <article class="card" data-terms="scholarships education school university">
+        <div class="symbol">🎓</div><h3>Scholarships</h3>
+        <p>Find potential funding for your education.</p>
+        <a class="card-link" href="#opportunityResults">Explore scholarships →</a>
+      </article>
+      <article class="card" data-terms="grants funding">
+        <div class="symbol">💰</div><h3>Grants</h3>
+        <p>Discover funding programmes and support.</p>
+        <a class="card-link" href="#opportunityResults">Explore grants →</a>
+      </article>
+      <article class="card" data-terms="internships placements experience">
+        <div class="symbol">🚀</div><h3>Internships</h3>
+        <p>Build experience and develop useful skills.</p>
+        <a class="card-link" href="#opportunityResults">Explore internships →</a>
+      </article>
+      <article class="card" data-terms="competitions contests challenges">
+        <div class="symbol">🏆</div><h3>Competitions</h3>
+        <p>Discover contests, challenges and programmes.</p>
+        <a class="card-link" href="#opportunityResults">Explore competitions →</a>
+      </article>
+      <article class="card" data-terms="awards prizes recognition">
+        <div class="symbol">🌟</div><h3>Awards</h3>
+        <p>Explore awards and recognition opportunities.</p>
+        <a class="card-link" href="#opportunityResults">Explore awards →</a>
+      </article>
+      <article class="card" data-terms="online courses learning training">
+        <div class="symbol">📚</div><h3>Online Courses</h3>
+        <p>Find learning resources and skill-building courses.</p>
+        <a class="card-link" href="#opportunityResults">Explore courses →</a>
+      </article>
+    </div>
+
+    <p class="small" id="searchStatus" role="status"></p>
+  </section>
+
+  <section class="wrap" id="opportunityResults">
+    <h2 class="section-title">Opportunity listings</h2>
+    <div class="notice">
+      <strong>Live listings are not connected yet.</strong>
+      <p>This homepage currently displays the website structure. Real listings will appear here after the source adapters and Supabase backend are connected and tested. We will not display sample listings as if they were real opportunities.</p>
+    </div>
+    <p class="small">Always confirm deadlines, eligibility and application instructions on the original organisation's website.</p>
+  </section>
+
+  <section class="wrap" id="verify">
+    <h2 class="section-title">Verify before you trust</h2>
+    <p class="sub">Prepare an opportunity link or message for a future verification check.</p>
+    <div class="card">
+      <form id="verifyForm">
+        <label for="verifyType">What do you want to check?</label>
+        <select id="verifyType">
+          <option value="link">Website or application link</option>
+          <option value="text">Opportunity message or title</option>
+        </select>
+        <label for="verifyInput">Paste the link or message</label>
+        <textarea id="verifyInput" required placeholder="Paste the opportunity URL or message here..."></textarea>
+        <button class="btn primary" type="submit" style="margin-top:14px">Prepare check</button>
+        <p class="small">Do not paste passwords, bank details, verification codes or sensitive personal information.</p>
+        <div class="status" id="verifyStatus" role="status"></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="wrap" id="alerts">
+    <h2 class="section-title">Opportunity alerts</h2>
+    <div class="card">
+      <p>Get notified when matching opportunities and verified-source updates become available.</p>
+      <p class="small">Email alerts will be enabled after authentication and notification services are connected.</p>
+      <a class="btn" href="#plans">See plans</a>
+    </div>
+  </section>
+
+  <section class="wrap plans" id="plans">
+    <h2 class="section-title">Simple plans</h2>
+    <p class="sub">These are the intended plan prices. Payment processing and account entitlements are not active yet.</p>
+    <div class="grid">
+      <article class="card">
+        <h3>Starter</h3><div class="price">₦1,500</div>
+        <p>Basic opportunity discovery and limited checks.</p>
+      </article>
+      <article class="card">
+        <h3>Plus</h3><div class="price">₦3,000</div>
+        <p>More checks and personalised opportunity tracking.</p>
+      </article>
+      <article class="card">
+        <h3>Pro</h3><div class="price">₦5,000</div>
+        <p>Higher usage limits and advanced tracking features.</p>
+      </article>
+    </div>
+    <p class="small">International pricing, billing intervals and exact plan limits will be configured before checkout is enabled.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap footer-row">
+    <div><strong>OpportunityCheck</strong><br><span class="small">Verify Before You Trust.</span></div>
+    <div class="small">Check evidence. Protect your information. Apply through official sources.</div>
+  </div>
+</footer>
+
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const searchStatus = document.getElementById("searchStatus");
+  const cards = [...document.querySelectorAll("#categoryGrid .card")];
+
+  function filterCategories() {
+    const query = searchInput.value.trim().toLowerCase();
+    let shown = 0;
+
+    cards.forEach(card => {
+      const terms = (card.dataset.terms + " " + card.innerText).toLowerCase();
+      const match = !query || terms.includes(query);
+      card.hidden = !match;
+      if (match) shown++;
+    });
+
+    searchStatus.textContent = shown
+      ? `${shown} categor${shown === 1 ? "y" : "ies"} shown. This searches categories, not live listings.`
+      : "No matching categories. Try another search.";
+  }
+
+  document.getElementById("searchButton").addEventListener("click", filterCategories);
+  searchInput.addEventListener("input", filterCategories);
+
+  document.getElementById("verifyForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const type = document.getElementById("verifyType").value;
+    const value = document.getElementById("verifyInput").value.trim();
+    const status = document.getElementById("verifyStatus");
+
+    if (!value) {
+      status.textContent = "Please enter a link or message first.";
+      return;
+    }
+
+    status.textContent = type === "link"
+      ? "Your link is ready for the verification backend. No safety scan has been performed yet."
+      : "Your message is ready for the verification backend. No authenticity assessment has been performed yet.";
+  });
+</script>
+</body>
+</html>
