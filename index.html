@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>OpportunityCheck — Sync Test</title>
+  <title>OpportunityCheck — Internship Sync Test</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -57,8 +57,8 @@
 </head>
 <body>
 <main>
-  <h1>OpportunityCheck Sync Test</h1>
-  <p>Test the admin login and Jobicy opportunity synchronisation.</p>
+  <h1>OpportunityCheck Internship Sync Test</h1>
+  <p>Test OpenIntern and ElevateU internship synchronisation.</p>
 
   <p class="note">
     Enter your Supabase project URL and publishable key.
@@ -86,7 +86,7 @@
       autocomplete="current-password" required>
 
     <button id="runButton" type="submit">
-      Sign In and Test Sync
+      Sign In and Test Internship Sync
     </button>
   </form>
 
@@ -104,7 +104,6 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
     button.disabled = true;
     result.textContent = "Signing in to Supabase...";
 
@@ -146,10 +145,10 @@
       }
 
       result.textContent =
-        "Sign-in successful. Calling sync-opportunities now...";
+        "Sign-in successful. Calling sync-internships now...";
 
       const { data, error } = await client.functions.invoke(
-        "sync-opportunities",
+        "sync-internships",
         { body: {} }
       );
 
